@@ -14,6 +14,8 @@
 		C9393D6E1BEBABAF00D86E45 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C9393D6C1BEBABAF00D86E45 /* Main.storyboard */; };
 		C9393D701BEBABAF00D86E45 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C9393D6F1BEBABAF00D86E45 /* Assets.xcassets */; };
 		C9393D731BEBABAF00D86E45 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C9393D711BEBABAF00D86E45 /* LaunchScreen.storyboard */; };
+		C9A71E9F1BF4D04B003D3A03 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A71E9E1BF4D04B003D3A03 /* Game.swift */; settings = {ASSET_TAGS = (); }; };
+		C9A71EA31BF50529003D3A03 /* GameDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A71EA21BF50529003D3A03 /* GameDelegate.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +28,8 @@
 		C9393D6F1BEBABAF00D86E45 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C9393D721BEBABAF00D86E45 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		C9393D741BEBABAF00D86E45 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		C9A71E9E1BF4D04B003D3A03 /* Game.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Game.swift; sourceTree = "<group>"; };
+		C9A71EA21BF50529003D3A03 /* GameDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -42,6 +46,8 @@
 		C9393D581BEBABAF00D86E45 = {
 			isa = PBXGroup;
 			children = (
+				C9A71EA21BF50529003D3A03 /* GameDelegate.swift */,
+				C9A71E9E1BF4D04B003D3A03 /* Game.swift */,
 				C9393D631BEBABAF00D86E45 /* Projecten FDS */,
 				C9393D621BEBABAF00D86E45 /* Products */,
 			);
@@ -143,7 +149,9 @@
 			files = (
 				C9393D691BEBABAF00D86E45 /* GameScene.swift in Sources */,
 				C9393D6B1BEBABAF00D86E45 /* GameViewController.swift in Sources */,
+				C9A71EA31BF50529003D3A03 /* GameDelegate.swift in Sources */,
 				C9393D651BEBABAF00D86E45 /* AppDelegate.swift in Sources */,
+				C9A71E9F1BF4D04B003D3A03 /* Game.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -293,6 +301,7 @@
 				C9393D791BEBABAF00D86E45 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
