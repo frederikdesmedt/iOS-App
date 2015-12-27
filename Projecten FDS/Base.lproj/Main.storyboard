@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BV1-FR-VrT">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="hvQ-5x-B0O">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
     </dependencies>
@@ -19,6 +19,11 @@
                     </view>
                     <navigationItem key="navigationItem" title="Main Menu" id="1De-b6-Tvc">
                         <barButtonItem key="leftBarButtonItem" title="Highscore" id="G4n-CR-QwW"/>
+                        <barButtonItem key="rightBarButtonItem" title="New game" id="W2J-ou-7gD">
+                            <connections>
+                                <segue destination="BV1-FR-VrT" kind="show" id="AZq-I6-Itf"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="y3Y-EC-3Xb" userLabel="First Responder" sceneMemberID="firstResponder"/>

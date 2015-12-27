@@ -10,7 +10,7 @@ import SpriteKit
 
 class GameScene: SKScene {
     
-    var game = Game()
+    let game = Game()
     
     var cardBackgrounds: [Game.Location: SKNode] = [:]
     var gameCards: [Game.Location: SKNode] = [:]
@@ -68,31 +68,25 @@ class GameScene: SKScene {
         return SKSpriteNode(color: UIColor(red: 1, green: 1, blue: 1, alpha: 0.2), size: CGSize(width: cardSize, height: cardSize))
     }
     
+    var cards: [Game.Location: SKSpriteNode] = [:]
+    
+    func addCard(position: Game.Location, card: SKSpriteNode) {
+        addChild(card)
+        cards[position] = card
+    }
+    
+    func removeCard(position: Game.Location) {
+        if let card = cards[position] {
+            removeChildrenInArray([card])
+            cards.removeValueForKey(position)
+        }
+    }
+    
     func initGestureRecognizerForDirection(direction: UISwipeGestureRecognizerDirection, action: String) {
         let recognizer = UISwipeGestureRecognizer(target: self, action: Selector(action))
         recognizer.direction = direction
         view!.addGestureRecognizer(recognizer)
     }
-    
-    //    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-    //       /* Called when a touch begins */
-    //
-    //        for touch in touches {
-    //            let location = touch.locationInNode(self)
-    //
-    //            let sprite = SKSpriteNode(imageNamed:"Spaceship")
-    //
-    //            sprite.xScale = 0.5
-    //            sprite.yScale = 0.5
-    //            sprite.position = location
-    //
-    //            let action = SKAction.rotateByAngle(CGFloat(M_PI), duration:1)
-    //
-    //            sprite.runAction(SKAction.repeatActionForever(action))
-    //
-    //            self.addChild(sprite)
-    //        }
-    //    }
     
     override func update(currentTime: CFTimeInterval) {
         
@@ -102,52 +96,58 @@ class GameScene: SKScene {
 extension GameScene {
     
     func swipedLeft(sender: UISwipeGestureRecognizer) {
-        if let location = game.randomLocation {
-            game.addRandomValue(location)
-        }
+        game.swipeLeft()
     }
     
     func swipedRight(sender: UISwipeGestureRecognizer) {
-        if let location = game.randomLocation {
-            game.addRandomValue(location)
-        }
+        game.swipeRight()
     }
     
     func swipedUp(sender: UISwipeGestureRecognizer) {
-        if let location = game.randomLocation {
-            game.addRandomValue(location)
-        }
+        game.swipeUp()
     }
     
     func swipedDown(sender: UISwipeGestureRecognizer) {
-        if let location = game.randomLocation {
-            game.addRandomValue(location)
-        }
+        game.swipeDown()
     }
-}
-
-extension GameScene: GameDelegate {
-    func newCardWasAdded(location: Game.Location, value: Int) {
-        guard let _ = cardBackgrounds[location] else {
-            createBoard()
-            return newCardWasAdded(location, value: value)
-        }
-        
-        let backgroundCard = cardBackgrounds[location]!
-        
-        let card = createCard()
-        card.position = backgroundCard.position
+    
+    func createLabel(value: String) -> SKLabelNode {
         let label = SKLabelNode(text: String(value))
         label.fontName = "AvenirNext"
         label.fontSize = 24
         label.verticalAlignmentMode = SKLabelVerticalAlignmentMode.Center
         label.horizontalAlignmentMode = SKLabelHorizontalAlignmentMode.Center
+        return label
+    }
+}
+
+extension GameScene: GameDelegate {
+    
+    func newCardWasAdded(location: Game.Location, value: Int) {
+        guard let backgroundCard = cardBackgrounds[location] else {
+            createBoard()
+            return newCardWasAdded(location, value: value)
+        }
+        
+        let card = createCard()
+        card.position = backgroundCard.position
+        let label = createLabel(String(value))
         card.addChild(label)
-        addChild(card)
+        addCard(location, card: card)
     }
     
     func cardsDidMerge(from: Game.Location, to: Game.Location, oldValue: Int, newValue: Int) {
-        // TODO: Implement card animation
+        guard let backgroundCard = cardBackgrounds[to] else {
+            return debugPrint("Background card unavailable")
+        }
+        
+        let card = createCard()
+        removeCard(to)
+        card.position = backgroundCard.position
+        let label = createLabel(String(newValue))
+        card.addChild(label)
+        addCard(to, card: card)
+        removeCard(from)
     }
     
     func game(game: Game, score: Int) {
