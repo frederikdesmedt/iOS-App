@@ -10,10 +10,13 @@ import UIKit
 import SpriteKit
 
 class GameViewController: UIViewController {
+    
+    var gameScene: GameScene!
+    var nextGame: Game?
+    var delegate: GameViewControllerDelegate?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         if let scene = GameScene(fileNamed:"GameScene") {
             // Configure the view.
             let skView = self.view as! SKView
@@ -25,9 +28,24 @@ class GameViewController: UIViewController {
             
             /* Set the scale mode to scale to fit the window */
             scene.scaleMode = .AspectFill
+            if let nextGame = nextGame {
+                scene.game = nextGame
+                self.nextGame = nil
+            }
             
             skView.presentScene(scene)
+            gameScene = scene
         }
+    }
+    
+    override func didMoveToParentViewController(parent: UIViewController?) {
+        if (!(parent?.isEqual(self.parentViewController) ?? false)) {
+            didPauseGame()
+        }
+    }
+    
+    override func viewWillLayoutSubviews() {
+        gameScene.createBoard()
     }
 
     override func shouldAutorotate() -> Bool {
@@ -49,5 +67,11 @@ class GameViewController: UIViewController {
 
     override func prefersStatusBarHidden() -> Bool {
         return true
+    }
+    
+    func didPauseGame() {
+        if let delegate = delegate {
+            delegate.didPauseGame(gameScene.game)
+        }
     }
 }

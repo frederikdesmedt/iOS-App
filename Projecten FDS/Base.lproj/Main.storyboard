@@ -7,7 +7,7 @@
         <!--Main Menu-->
         <scene sceneID="ggy-OX-97b">
             <objects>
-                <viewController id="6GY-yD-LNV" sceneMemberID="viewController">
+                <viewController id="6GY-yD-LNV" customClass="MainMenuViewController" customModule="Projecten_FDS" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Lr4-HI-Ut5"/>
                         <viewControllerLayoutGuide type="bottom" id="VTt-ee-lSR"/>
@@ -15,22 +15,51 @@
                     <view key="view" contentMode="scaleToFill" id="Q6U-V0-Fhv">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="sDy-I5-3p9">
+                                <rect key="frame" x="247" y="228" width="106" height="144"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="p3z-Dd-p5e">
+                                        <rect key="frame" x="0.0" y="0.0" width="106" height="30"/>
+                                        <state key="normal" title="Continue Game"/>
+                                        <connections>
+                                            <segue destination="BV1-FR-VrT" kind="show" identifier="continueGame" id="rN7-1C-cgg"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Oc-QS-s49">
+                                        <rect key="frame" x="15" y="38" width="75" height="30"/>
+                                        <state key="normal" title="New Game"/>
+                                        <connections>
+                                            <segue destination="BV1-FR-VrT" kind="show" identifier="newGame" id="JY0-Ar-QlJ"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2hQ-4p-AVa">
+                                        <rect key="frame" x="14" y="76" width="78" height="30"/>
+                                        <state key="normal" title="Highscores"/>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5h7-Vy-Tt7">
+                                        <rect key="frame" x="38" y="114" width="30" height="30"/>
+                                        <state key="normal" title="Exit"/>
+                                    </button>
+                                </subviews>
+                            </stackView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="sDy-I5-3p9" firstAttribute="centerX" secondItem="Q6U-V0-Fhv" secondAttribute="centerX" id="P3l-eh-0He"/>
+                            <constraint firstItem="sDy-I5-3p9" firstAttribute="centerY" secondItem="Q6U-V0-Fhv" secondAttribute="centerY" id="aaa-mF-F3C"/>
+                        </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Main Menu" id="1De-b6-Tvc">
-                        <barButtonItem key="leftBarButtonItem" title="Highscore" id="G4n-CR-QwW"/>
-                        <barButtonItem key="rightBarButtonItem" title="New game" id="W2J-ou-7gD">
-                            <connections>
-                                <segue destination="BV1-FR-VrT" kind="show" id="AZq-I6-Itf"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Main Menu" id="1De-b6-Tvc"/>
+                    <connections>
+                        <outlet property="continueGameButton" destination="p3z-Dd-p5e" id="Ytq-nk-Xcu"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="y3Y-EC-3Xb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="270" y="311"/>
         </scene>
-        <!--Game View Controller-->
+        <!--2048-->
         <scene sceneID="tXr-a1-R10">
             <objects>
                 <viewController id="BV1-FR-VrT" customClass="GameViewController" customModule="Projecten_FDS" customModuleProvider="target" sceneMemberID="viewController">
@@ -43,6 +72,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
+                    <navigationItem key="navigationItem" title="2048" id="oX6-Kx-cyw"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SZV-WD-TEh" sceneMemberID="firstResponder"/>
             </objects>
@@ -67,4 +97,7 @@
             <point key="canvasLocation" x="-542" y="311"/>
         </scene>
     </scenes>
+    <inferredMetricsTieBreakers>
+        <segue reference="rN7-1C-cgg"/>
+    </inferredMetricsTieBreakers>
 </document>

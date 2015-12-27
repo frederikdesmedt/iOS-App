@@ -10,7 +10,7 @@ import SpriteKit
 
 class GameScene: SKScene {
     
-    let game = Game()
+    var game = Game()
     
     var cardBackgrounds: [Game.Location: SKNode] = [:]
     var gameCards: [Game.Location: SKNode] = [:]
@@ -31,9 +31,21 @@ class GameScene: SKScene {
         // Fill fixed-size cards with nil
         backgroundColor = UIColor(red: 187 / 255, green: 173 / 255, blue: 160 / 255, alpha: 1)
         game.delegate = self
-        game.addRandomValue(game.randomLocation!)
+        
+        if game.usedCardsCount == 0 {
+            game.addRandomValue(game.randomLocation!)
+        } else {
+            Game.forEachLocation {
+                let value = self.game.valueForLocation($0)
+                if value != 0 {
+                    self.newCardWasAdded($0, value: value)
+                }
+            }
+        }
+        
         createBoard()
     }
+    
     
     func createBoard() {
         // Skip board generation if there is no SKView
@@ -42,7 +54,7 @@ class GameScene: SKScene {
         }
         
         size = view!.bounds.size
-        viewWidth = min(size.width, size.height)
+        viewWidth = min(size.width, size.height - 30)
         viewHeight = viewWidth
         cardSize = min(self.viewWidth / CGFloat(Game.widthInCards) - margin * 2, self.viewHeight / CGFloat(Game.heightInCards) - margin * 2)
         
@@ -61,6 +73,16 @@ class GameScene: SKScene {
             let y = self.viewHeight * CGFloat($0.y) / CGFloat(Game.heightInCards) + self.cardSize / 2 + self.margin - paddingY
             card.position = CGPoint(x: x, y: y)
             self.addChild(card)
+        }
+        
+        cards.forEach { (location, card) in
+            let backgroundCard = cardBackgrounds[location]!
+            let card = createCard()
+            removeCard(location)
+            card.position = backgroundCard.position
+            let label = createLabel(String(game.valueForLocation(location)))
+            card.addChild(label)
+            addCard(location, card: card)
         }
     }
     

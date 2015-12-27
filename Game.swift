@@ -60,6 +60,14 @@ class Game {
         }
     }
     
+    var remainingCardsCount: Int {
+        return available.count
+    }
+    
+    var usedCardsCount: Int {
+        return Game.widthInCards * Game.heightInCards - available.count
+    }
+    
     func addRandomValue(location: Location) {
         let cardValue = drand48() <= 0.7 ? 2 : 4
         valueForLocation(location, value: cardValue)
