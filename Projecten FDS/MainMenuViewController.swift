@@ -14,14 +14,15 @@ class MainMenuViewController: UIViewController, GameViewControllerDelegate {
         }
     }
     
+    @IBAction func continueGame(element: UIControl) {
+        performSegueWithIdentifier("game", sender: element)
+    }
+    
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        switch segue.identifier {
-        case "newGame"?:
+        switch segue.identifier! {
+        case "game":
             let controller = segue.destinationViewController as! GameViewController
-            controller.delegate = self
-        case "continueGame"?:
-            let controller = segue.destinationViewController as! GameViewController
-            controller.nextGame = game
+            controller.nextGame = sender as? UIButton == continueGameButton ? game : nil
             controller.delegate = self
         default:
             return

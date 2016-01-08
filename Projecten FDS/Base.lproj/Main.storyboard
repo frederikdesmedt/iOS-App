@@ -17,47 +17,125 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="sDy-I5-3p9">
-                                <rect key="frame" x="247" y="228" width="106" height="144"/>
+                                <rect key="frame" x="247" y="440" width="106" height="144"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="p3z-Dd-p5e">
                                         <rect key="frame" x="0.0" y="0.0" width="106" height="30"/>
                                         <state key="normal" title="Continue Game"/>
                                         <connections>
-                                            <segue destination="BV1-FR-VrT" kind="show" identifier="continueGame" id="rN7-1C-cgg"/>
+                                            <action selector="continueGame:" destination="6GY-yD-LNV" eventType="touchUpInside" id="KL7-KH-iS2"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Oc-QS-s49">
-                                        <rect key="frame" x="15" y="38" width="75" height="30"/>
+                                        <rect key="frame" x="16" y="38" width="75" height="30"/>
                                         <state key="normal" title="New Game"/>
                                         <connections>
-                                            <segue destination="BV1-FR-VrT" kind="show" identifier="newGame" id="JY0-Ar-QlJ"/>
+                                            <action selector="continueGame:" destination="6GY-yD-LNV" eventType="touchUpInside" id="TXk-ay-Vne"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2hQ-4p-AVa">
                                         <rect key="frame" x="14" y="76" width="78" height="30"/>
                                         <state key="normal" title="Highscores"/>
+                                        <connections>
+                                            <segue destination="dEv-Ih-wJD" kind="show" identifier="highscores" id="k4p-bV-iuY"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5h7-Vy-Tt7">
                                         <rect key="frame" x="38" y="114" width="30" height="30"/>
                                         <state key="normal" title="Exit"/>
                                     </button>
                                 </subviews>
+                                <variation key="heightClass=compact" axis="horizontal"/>
+                            </stackView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2048" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="K63-If-SCi">
+                                <rect key="frame" x="268" y="284" width="65" height="32.5"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <stackView opaque="NO" contentMode="scaleToFill" spacing="3" translatesAutoresizingMaskIntoConstraints="NO" id="EEg-03-ezI">
+                                <rect key="frame" x="137" y="333" width="328" height="21"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Join the numbers and get to the" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Asf-4C-Bbr">
+                                        <rect key="frame" x="0.0" y="0.0" width="245" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2048 tile!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="R7E-L1-LVa">
+                                        <rect key="frame" x="248" y="0.0" width="80" height="21"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <variation key="widthClass=compact" alignment="center" axis="vertical"/>
                             </stackView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="EEg-03-ezI" firstAttribute="centerX" secondItem="Q6U-V0-Fhv" secondAttribute="centerX" id="4gc-Re-XmW"/>
+                            <constraint firstItem="K63-If-SCi" firstAttribute="centerX" secondItem="Q6U-V0-Fhv" secondAttribute="centerX" id="7SB-WQ-Vup"/>
                             <constraint firstItem="sDy-I5-3p9" firstAttribute="centerX" secondItem="Q6U-V0-Fhv" secondAttribute="centerX" id="P3l-eh-0He"/>
-                            <constraint firstItem="sDy-I5-3p9" firstAttribute="centerY" secondItem="Q6U-V0-Fhv" secondAttribute="centerY" id="aaa-mF-F3C"/>
+                            <constraint firstItem="VTt-ee-lSR" firstAttribute="top" secondItem="sDy-I5-3p9" secondAttribute="bottom" constant="16" id="UEO-Jy-owS"/>
+                            <constraint firstItem="EEg-03-ezI" firstAttribute="top" secondItem="K63-If-SCi" secondAttribute="bottom" constant="16" id="pZB-5Q-BXV"/>
+                            <constraint firstItem="K63-If-SCi" firstAttribute="centerY" secondItem="Q6U-V0-Fhv" secondAttribute="centerY" id="u87-jT-oSx"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Main Menu" id="1De-b6-Tvc"/>
                     <connections>
                         <outlet property="continueGameButton" destination="p3z-Dd-p5e" id="Ytq-nk-Xcu"/>
+                        <segue destination="BV1-FR-VrT" kind="show" identifier="game" id="RMH-hm-RJt"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="y3Y-EC-3Xb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="270" y="311"/>
+        </scene>
+        <!--Highscores-->
+        <scene sceneID="bvE-SE-GOr">
+            <objects>
+                <tableViewController id="dEv-Ih-wJD" customClass="HighscoreController" customModule="Projecten_FDS" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="7Pg-SC-vkt">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="highscore" textLabel="J4t-hN-xOl" detailTextLabel="2jl-St-ny2" style="IBUITableViewCellStyleValue1" id="Yim-MY-8HW">
+                                <rect key="frame" x="0.0" y="92" width="600" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Yim-MY-8HW" id="Yhq-VM-srh">
+                                    <rect key="frame" x="0.0" y="0.0" width="567" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="J4t-hN-xOl">
+                                            <rect key="frame" x="15" y="12" width="31.5" height="19.5"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Detail" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="2jl-St-ny2">
+                                            <rect key="frame" x="523.5" y="12" width="41.5" height="19.5"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                            <color key="textColor" red="0.55686274509803924" green="0.55686274509803924" blue="0.57647058823529407" alpha="1" colorSpace="calibratedRGB"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="dEv-Ih-wJD" id="OMH-9O-2uQ"/>
+                            <outlet property="delegate" destination="dEv-Ih-wJD" id="74P-S0-957"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Highscores" id="Ztb-u8-ab5"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="3cG-Zt-YpR" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="270" y="1130"/>
         </scene>
         <!--2048-->
         <scene sceneID="tXr-a1-R10">
@@ -97,7 +175,4 @@
             <point key="canvasLocation" x="-542" y="311"/>
         </scene>
     </scenes>
-    <inferredMetricsTieBreakers>
-        <segue reference="rN7-1C-cgg"/>
-    </inferredMetricsTieBreakers>
 </document>

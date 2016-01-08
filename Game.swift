@@ -53,6 +53,7 @@ class Game {
     var matrix: [[Int]] = [[Int]](count: Game.widthInCards, repeatedValue: Array(count: Game.heightInCards, repeatedValue: 0))
     private var available = [Location]()
     var delegate: GameDelegate?
+    var score: Int = 0
     
     init() {
         Game.forEachLocation {
@@ -134,6 +135,11 @@ extension Game {
                             available.append(location)
                             valueForLocation(location, value: 0)
                             valueForLocation(backLocation, value: locationValue + backLocationValue)
+                            
+                            if backLocationValue > 0 {
+                                score += backLocationValue + locationValue
+                            }
+                            
                             delegate?.cardsDidMerge(location, to: backLocation, oldValue: locationValue, newValue: locationValue + backLocationValue)
                             if backLocationValue != 0 {
                                 stop = backLocation.x
@@ -268,5 +274,17 @@ extension Game {
         }
         
         return false
+    }
+}
+
+extension Game {
+    struct Snapshot {
+        
+        let score: Int
+        let cards: [[Int]]
+        
+        static func snapshotFrom(game: Game) -> Snapshot {
+            return Snapshot(score: game.score, cards: game.matrix)
+        }
     }
 }

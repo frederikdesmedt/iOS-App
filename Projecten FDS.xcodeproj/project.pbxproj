@@ -18,6 +18,8 @@
 		C9393D731BEBABAF00D86E45 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C9393D711BEBABAF00D86E45 /* LaunchScreen.storyboard */; };
 		C9A71E9F1BF4D04B003D3A03 /* Game.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A71E9E1BF4D04B003D3A03 /* Game.swift */; settings = {ASSET_TAGS = (); }; };
 		C9A71EA31BF50529003D3A03 /* GameDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A71EA21BF50529003D3A03 /* GameDelegate.swift */; settings = {ASSET_TAGS = (); }; };
+		C9B79E1D1C404E5800FCCC3E /* HighscoreController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B79E1C1C404E5800FCCC3E /* HighscoreController.swift */; settings = {ASSET_TAGS = (); }; };
+		C9B79E1F1C404F7200FCCC3E /* Highscore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9B79E1E1C404F7200FCCC3E /* Highscore.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +36,8 @@
 		C9393D741BEBABAF00D86E45 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C9A71E9E1BF4D04B003D3A03 /* Game.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Game.swift; path = ../Game.swift; sourceTree = "<group>"; };
 		C9A71EA21BF50529003D3A03 /* GameDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameDelegate.swift; path = ../GameDelegate.swift; sourceTree = "<group>"; };
+		C9B79E1C1C404E5800FCCC3E /* HighscoreController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HighscoreController.swift; sourceTree = "<group>"; };
+		C9B79E1E1C404F7200FCCC3E /* Highscore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Highscore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,6 +56,7 @@
 			children = (
 				C9A71EA21BF50529003D3A03 /* GameDelegate.swift */,
 				C9A71E9E1BF4D04B003D3A03 /* Game.swift */,
+				C9B79E1E1C404F7200FCCC3E /* Highscore.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -62,6 +67,7 @@
 				C9393D6A1BEBABAF00D86E45 /* GameViewController.swift */,
 				C91781151C306046002202B4 /* MainMenuViewController.swift */,
 				C91781171C306ADC002202B4 /* GameViewControllerDelegate.swift */,
+				C9B79E1C1C404E5800FCCC3E /* HighscoreController.swift */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -179,8 +185,10 @@
 			files = (
 				C9393D691BEBABAF00D86E45 /* GameScene.swift in Sources */,
 				C9393D6B1BEBABAF00D86E45 /* GameViewController.swift in Sources */,
+				C9B79E1F1C404F7200FCCC3E /* Highscore.swift in Sources */,
 				C9A71EA31BF50529003D3A03 /* GameDelegate.swift in Sources */,
 				C9393D651BEBABAF00D86E45 /* AppDelegate.swift in Sources */,
+				C9B79E1D1C404E5800FCCC3E /* HighscoreController.swift in Sources */,
 				C91781161C306046002202B4 /* MainMenuViewController.swift in Sources */,
 				C91781181C306ADC002202B4 /* GameViewControllerDelegate.swift in Sources */,
 				C9A71E9F1BF4D04B003D3A03 /* Game.swift in Sources */,
