@@ -1,5 +1,5 @@
 import UIKit
-import Foundation
+import RealmSwift
 
 class Game {
     
@@ -75,9 +75,7 @@ class Game {
         
         // Remove all available locations pointing to the current location (should be only one)
         available = available.filter { $0.x != location.x || $0.y != location.y }
-        if let delegate = delegate {
-            delegate.newCardWasAdded(location, value: cardValue)
-        }
+        delegate?.newCardWasAdded(self, location: location, value: cardValue)
     }
     
     var randomLocation: Location? {
@@ -92,7 +90,11 @@ class Game {
     }
     
     func valueForLocation(location: Location) -> Int {
-        return matrix[location.x][location.y]
+        if case 0..<Game.widthInCards = location.x, 0..<Game.heightInCards = location.y {
+            return matrix[location.x][location.y]
+        }
+        
+        return -1
     }
     
     func valueForLocation(location: Location, value: Int) {
@@ -120,6 +122,36 @@ extension Game.Location: Hashable {
 }
 
 extension Game {
+    var isGameOver: Bool {
+        if !available.isEmpty {
+            return false
+        }
+        
+        for x in 0..<Game.widthInCards {
+            for y in 0..<Game.heightInCards {
+                let currentLocation = Location(x: x, y: y)
+                let currentValue = valueForLocation(currentLocation)
+                if valueForLocation(currentLocation.slideLeft()) == currentValue {
+                    return false
+                }
+                
+                if valueForLocation(currentLocation.slideRight()) == currentValue {
+                    return false
+                }
+                
+                if valueForLocation(currentLocation.slideUp()) == currentValue {
+                    return false
+                }
+                
+                if valueForLocation(currentLocation.slideDown()) == currentValue {
+                    return false
+                }
+            }
+        }
+        
+        return true
+    }
+    
     func swipeLeft() {
         for y in 0..<Game.heightInCards {
             var stop = -1
@@ -151,9 +183,7 @@ extension Game {
             }
         }
         
-        if let location = self.randomLocation {
-            addRandomValue(location)
-        }
+        delegate?.turnEnded(self)
     }
     
     func swipeRight() {
@@ -171,6 +201,11 @@ extension Game {
                             available.append(location)
                             valueForLocation(location, value: 0)
                             valueForLocation(backLocation, value: locationValue + backLocationValue)
+                            
+                            if backLocationValue > 0 {
+                                score += backLocationValue + locationValue
+                            }
+                            
                             delegate?.cardsDidMerge(location, to: backLocation, oldValue: locationValue, newValue: locationValue + backLocationValue)
                             if backLocationValue != 0 {
                                 stop = backLocation.x
@@ -182,15 +217,13 @@ extension Game {
             }
         }
         
-        if let location = self.randomLocation {
-            addRandomValue(location)
-        }
+        delegate?.turnEnded(self)
     }
     
     func swipeUp() {
         for x in 0..<Game.widthInCards {
             var stop = Game.heightInCards
-            for y in 0..<Game.heightInCards {
+            for y in (Game.heightInCards - 1).stride(through: 0, by: -1) {
                 let location = Location(x: x, y: y)
                 let locationValue = valueForLocation(location)
                 if locationValue != 0 {
@@ -202,6 +235,11 @@ extension Game {
                             available.append(location)
                             valueForLocation(location, value: 0)
                             valueForLocation(backLocation, value: locationValue + backLocationValue)
+                            
+                            if backLocationValue > 0 {
+                                score += backLocationValue + locationValue
+                            }
+                            
                             delegate?.cardsDidMerge(location, to: backLocation, oldValue: locationValue, newValue: locationValue + backLocationValue)
                             if backLocationValue != 0 {
                                 stop = backLocation.y
@@ -213,15 +251,13 @@ extension Game {
             }
         }
         
-        if let location = self.randomLocation {
-            addRandomValue(location)
-        }
+        delegate?.turnEnded(self)
     }
     
     func swipeDown() {
         for x in 0..<Game.widthInCards {
             var stop = -1
-            for y in (Game.heightInCards - 1).stride(through: 0, by: -1) {
+            for y in 0..<Game.heightInCards {
                 let location = Location(x: x, y: y)
                 let locationValue = valueForLocation(location)
                 if locationValue != 0 {
@@ -233,6 +269,11 @@ extension Game {
                             available.append(location)
                             valueForLocation(location, value: 0)
                             valueForLocation(backLocation, value: locationValue + backLocationValue)
+                            
+                            if backLocationValue > 0 {
+                                score += backLocationValue + locationValue
+                            }
+                            
                             delegate?.cardsDidMerge(location, to: backLocation, oldValue: locationValue, newValue: locationValue + backLocationValue)
                             if backLocationValue != 0 {
                                 stop = backLocation.x
@@ -244,9 +285,7 @@ extension Game {
             }
         }
         
-        if let location = self.randomLocation {
-            addRandomValue(location)
-        }
+        delegate?.turnEnded(self)
     }
     
     /// Two locations are connected if they have the same x or y and there are only 0's in between
@@ -274,17 +313,5 @@ extension Game {
         }
         
         return false
-    }
-}
-
-extension Game {
-    struct Snapshot {
-        
-        let score: Int
-        let cards: [[Int]]
-        
-        static func snapshotFrom(game: Game) -> Snapshot {
-            return Snapshot(score: game.score, cards: game.matrix)
-        }
     }
 }

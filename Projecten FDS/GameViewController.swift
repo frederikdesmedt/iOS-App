@@ -14,7 +14,7 @@ class GameViewController: UIViewController {
     var gameScene: GameScene!
     var nextGame: Game?
     var delegate: GameViewControllerDelegate?
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         if let scene = GameScene(fileNamed:"GameScene") {
@@ -33,9 +33,14 @@ class GameViewController: UIViewController {
                 self.nextGame = nil
             }
             
+            scene.viewController = self
             skView.presentScene(scene)
             gameScene = scene
         }
+    }
+    
+    @IBAction func giveUp() {
+        didLoseGame(gameScene.game)
     }
     
     override func didMoveToParentViewController(parent: UIViewController?) {
@@ -47,11 +52,11 @@ class GameViewController: UIViewController {
     override func viewWillLayoutSubviews() {
         gameScene.createBoard()
     }
-
+    
     override func shouldAutorotate() -> Bool {
         return true
     }
-
+    
     override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
         if UIDevice.currentDevice().userInterfaceIdiom == .Phone {
             return .AllButUpsideDown
@@ -59,19 +64,32 @@ class GameViewController: UIViewController {
             return .All
         }
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Release any cached data, images, etc that aren't in use.
     }
-
+    
     override func prefersStatusBarHidden() -> Bool {
         return true
     }
     
     func didPauseGame() {
-        if let delegate = delegate {
-            delegate.didPauseGame(gameScene.game)
+        if gameScene.game.isGameOver {
+            delegate?.didLoseGame()
+        } else {
+            delegate?.didPauseGame(gameScene.game)
         }
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "gameOver" {
+            let gameOverController = (segue.destinationViewController as! UINavigationController).topViewController as! GameOverViewController
+            gameOverController.game = self.gameScene.game
+        }
+    }
+    
+    func didLoseGame(game: Game) {
+        performSegueWithIdentifier("gameOver", sender: self)
     }
 }

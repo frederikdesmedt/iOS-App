@@ -16,9 +16,11 @@ class GameScene: SKScene {
     var gameCards: [Game.Location: SKNode] = [:]
     var viewWidth: CGFloat!
     var viewHeight: CGFloat!
+    var viewController: GameViewController!
     
     var cardSize: CGFloat!
     let margin: CGFloat = 5
+    var gameUpdated = false
     
     override func didMoveToView(view: SKView) {
         scaleMode = .AspectFill
@@ -38,7 +40,7 @@ class GameScene: SKScene {
             Game.forEachLocation {
                 let value = self.game.valueForLocation($0)
                 if value != 0 {
-                    self.newCardWasAdded($0, value: value)
+                    self.newCardWasAdded(self.game, location: $0, value: value)
                 }
             }
         }
@@ -145,10 +147,21 @@ extension GameScene {
 
 extension GameScene: GameDelegate {
     
-    func newCardWasAdded(location: Game.Location, value: Int) {
+    func turnEnded(game: Game) {
+        if gameUpdated {
+            gameUpdated = false
+            if let available = game.randomLocation {
+                game.addRandomValue(available)
+            } else if game.isGameOver {
+                gameOver(game)
+            }
+        }
+    }
+    
+    func newCardWasAdded(game: Game, location: Game.Location, value: Int) {
         guard let backgroundCard = cardBackgrounds[location] else {
             createBoard()
-            return newCardWasAdded(location, value: value)
+            return newCardWasAdded(game, location: location, value: value)
         }
         
         let card = createCard()
@@ -170,9 +183,14 @@ extension GameScene: GameDelegate {
         card.addChild(label)
         addCard(to, card: card)
         removeCard(from)
+        gameUpdated = true
     }
     
-    func game(game: Game, score: Int) {
-        // TODO: Implement game over screen and log high score
+    func gameOver(game: Game) {
+        viewController.didLoseGame(game)
     }
+}
+
+protocol GameSceneDelegate {
+    func didLoseGame(game: Game)
 }
