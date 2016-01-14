@@ -14,12 +14,14 @@ class GameViewController: UIViewController {
     var gameScene: GameScene!
     var nextGame: Game?
     var delegate: GameViewControllerDelegate?
+    @IBOutlet var gameView: SKView!
+    @IBOutlet var giveUpButton: UIBarButtonItem!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         if let scene = GameScene(fileNamed:"GameScene") {
             // Configure the view.
-            let skView = self.view as! SKView
+            let skView = self.gameView
             skView.showsFPS = true
             skView.showsNodeCount = true
             
@@ -30,7 +32,7 @@ class GameViewController: UIViewController {
             scene.scaleMode = .AspectFill
             if let nextGame = nextGame {
                 scene.game = nextGame
-                self.nextGame = nil
+                self.gameView = nil
             }
             
             scene.viewController = self
@@ -40,7 +42,7 @@ class GameViewController: UIViewController {
     }
     
     @IBAction func giveUp() {
-        didLoseGame(gameScene.game)
+        gameScene.gameOver(gameScene.game)
     }
     
     override func didMoveToParentViewController(parent: UIViewController?) {
@@ -91,5 +93,6 @@ class GameViewController: UIViewController {
     
     func didLoseGame(game: Game) {
         performSegueWithIdentifier("gameOver", sender: self)
+        giveUpButton.enabled = false
     }
 }

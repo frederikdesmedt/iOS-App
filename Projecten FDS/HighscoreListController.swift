@@ -4,9 +4,11 @@ class HighscoreListViewController : UITableViewController, UISplitViewController
     
     var highscores: [Highscore]!
     let highscoreRepository = HighscoreRepository()
+    var selectedHighscore: Highscore?
     
     override func viewDidLoad() {
         highscores = highscoreRepository.highscores
+        splitViewController!.delegate = self
     }
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -26,10 +28,22 @@ class HighscoreListViewController : UITableViewController, UISplitViewController
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        
+        selectedHighscore = highscores[indexPath.item]
+        performSegueWithIdentifier("detail", sender: self)
     }
     
     func splitViewController(splitViewController: UISplitViewController, collapseSecondaryViewController secondaryViewController: UIViewController, ontoPrimaryViewController primaryViewController: UIViewController) -> Bool {
         return true
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "detail" {
+            let detailController = (segue.destinationViewController as! UINavigationController).topViewController as! HighscoreDetailsViewController
+            detailController.highscore = selectedHighscore!
+        }
+    }
+    
+    @IBAction func closeHighscores() {
+        splitViewController!.dismissViewControllerAnimated(true, completion: nil)
     }
 }

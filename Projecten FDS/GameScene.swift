@@ -17,13 +17,22 @@ class GameScene: SKScene {
     var viewWidth: CGFloat!
     var viewHeight: CGFloat!
     var viewController: GameViewController!
+    var shouldAllowSwiping = true
     
     var cardSize: CGFloat!
     let margin: CGFloat = 5
     var gameUpdated = false
     
+    var boardDimensions: CGSize?
+    
+    override func didChangeSize(oldSize: CGSize) {
+        if size != oldSize {
+            createBoard()
+        }
+    }
+    
     override func didMoveToView(view: SKView) {
-        scaleMode = .AspectFill
+        scaleMode = .ResizeFill
         
         initGestureRecognizerForDirection(.Left, action: "swipedLeft:")
         initGestureRecognizerForDirection(.Right, action: "swipedRight:")
@@ -44,8 +53,6 @@ class GameScene: SKScene {
                 }
             }
         }
-        
-        createBoard()
     }
     
     
@@ -56,13 +63,29 @@ class GameScene: SKScene {
         }
         
         size = view!.bounds.size
-        viewWidth = min(size.width, size.height - 30)
+        
+        if size == boardDimensions {
+            return
+        }
+        
+        boardDimensions = size
+        
+        viewWidth = min(size.width, size.height)
         viewHeight = viewWidth
         cardSize = min(self.viewWidth / CGFloat(Game.widthInCards) - margin * 2, self.viewHeight / CGFloat(Game.heightInCards) - margin * 2)
         
-        // Padding to center board in screen
-        let paddingX = min((size.height - size.width) / 2, 0)
-        let paddingY = min((size.width - size.height) / 2, 0)
+        switch UIDevice.currentDevice().userInterfaceIdiom {
+        case .Phone where UIDeviceOrientationIsLandscape(UIDevice.currentDevice().orientation):
+            anchorPoint = CGPoint(x: 0.25, y: 0)
+        case .Phone where UIDeviceOrientationIsPortrait(UIDevice.currentDevice().orientation):
+            anchorPoint = CGPoint(x: 0, y: 0.25)
+        case .Pad where UIDeviceOrientationIsLandscape(UIDevice.currentDevice().orientation):
+            anchorPoint = CGPoint(x: 0.15, y: 0)
+        case .Pad where UIDeviceOrientationIsPortrait(UIDevice.currentDevice().orientation):
+            anchorPoint = CGPoint(x: 0, y: 0.1)
+        default:
+            anchorPoint = CGPoint(x: 0, y: 0)
+        }
         
         // Reduce multi-dimensional array to one dimensional, filter out all nil values, "unwrap" the optional values
         removeChildrenInArray(Array(cardBackgrounds.values))
@@ -71,8 +94,8 @@ class GameScene: SKScene {
         Game.forEachLocation {
             let card = self.createCard()
             self.cardBackgrounds[Game.Location(x: $0.x, y: $0.y)] = card
-            let x = self.viewWidth * CGFloat($0.x) / CGFloat(Game.widthInCards) + self.cardSize / 2 + self.margin - paddingX
-            let y = self.viewHeight * CGFloat($0.y) / CGFloat(Game.heightInCards) + self.cardSize / 2 + self.margin - paddingY
+            let x = self.viewWidth * CGFloat($0.x) / CGFloat(Game.widthInCards) + self.cardSize / 2 + self.margin
+            let y = self.viewHeight * CGFloat($0.y) / CGFloat(Game.heightInCards) + self.cardSize / 2 + self.margin
             card.position = CGPoint(x: x, y: y)
             self.addChild(card)
         }
@@ -120,19 +143,27 @@ class GameScene: SKScene {
 extension GameScene {
     
     func swipedLeft(sender: UISwipeGestureRecognizer) {
-        game.swipeLeft()
+        if shouldAllowSwiping {
+            game.swipeLeft()
+        }
     }
     
     func swipedRight(sender: UISwipeGestureRecognizer) {
-        game.swipeRight()
+        if shouldAllowSwiping {
+            game.swipeRight()
+        }
     }
     
     func swipedUp(sender: UISwipeGestureRecognizer) {
-        game.swipeUp()
+        if shouldAllowSwiping {
+            game.swipeUp()
+        }
     }
     
     func swipedDown(sender: UISwipeGestureRecognizer) {
-        game.swipeDown()
+        if shouldAllowSwiping {
+            game.swipeDown()
+        }
     }
     
     func createLabel(value: String) -> SKLabelNode {
@@ -164,6 +195,7 @@ extension GameScene: GameDelegate {
             return newCardWasAdded(game, location: location, value: value)
         }
         
+        
         let card = createCard()
         card.position = backgroundCard.position
         let label = createLabel(String(value))
@@ -188,6 +220,7 @@ extension GameScene: GameDelegate {
     
     func gameOver(game: Game) {
         viewController.didLoseGame(game)
+        shouldAllowSwiping = false
     }
 }
 

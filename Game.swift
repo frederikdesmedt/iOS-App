@@ -55,6 +55,14 @@ class Game {
     var delegate: GameDelegate?
     var score: Int = 0
     
+    func setMatrixWithAnimation(matrix: [[Int]]) {
+        self.matrix = matrix
+        Game.forEachLocation {
+            location in
+            delegate?.newCardWasAdded(self, location: location, value: valueForLocation(location))
+        }
+    }
+    
     init() {
         Game.forEachLocation {
             self.available.append($0)

@@ -6,12 +6,8 @@ class MainMenuViewController: UIViewController, GameViewControllerDelegate {
     
     @IBOutlet var continueGameButton: UIButton!
     
-    override func viewDidAppear(animated: Bool) {
-        if let _ = game {
-            continueGameButton.hidden = false
-        } else {
-            continueGameButton.hidden = true
-        }
+    override func viewDidLoad() {
+        continueGameButton.hidden = game == nil
     }
     
     @IBAction func continueGame(element: UIControl) {
@@ -31,9 +27,11 @@ class MainMenuViewController: UIViewController, GameViewControllerDelegate {
     
     func didLoseGame() {
         game = nil
+        continueGameButton.hidden = true
     }
     
     func didPauseGame(game: Game) {
         self.game = game
+        continueGameButton.hidden = false
     }
 }
