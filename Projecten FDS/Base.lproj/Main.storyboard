@@ -119,7 +119,7 @@
                     <navigationItem key="navigationItem" title="2048" id="oX6-Kx-cyw">
                         <barButtonItem key="rightBarButtonItem" title="Give up" id="Ih6-JY-OgU">
                             <connections>
-                                <action selector="giveUp" destination="BV1-FR-VrT" id="GhP-6u-0fG"/>
+                                <action selector="giveUp" destination="BV1-FR-VrT" id="deu-dD-7Zu"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>

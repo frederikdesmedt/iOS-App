@@ -53,7 +53,9 @@ class Game {
     var matrix: [[Int]] = [[Int]](count: Game.widthInCards, repeatedValue: Array(count: Game.heightInCards, repeatedValue: 0))
     private var available = [Location]()
     var delegate: GameDelegate?
+    var shouldAddRandomValues = true
     var score: Int = 0
+    private var gameOver: Bool?
     
     func setMatrixWithAnimation(matrix: [[Int]]) {
         self.matrix = matrix
@@ -78,12 +80,14 @@ class Game {
     }
     
     func addRandomValue(location: Location) {
-        let cardValue = drand48() <= 0.7 ? 2 : 4
-        valueForLocation(location, value: cardValue)
-        
-        // Remove all available locations pointing to the current location (should be only one)
-        available = available.filter { $0.x != location.x || $0.y != location.y }
-        delegate?.newCardWasAdded(self, location: location, value: cardValue)
+        if shouldAddRandomValues {
+            let cardValue = drand48() <= 0.7 ? 2 : 4
+            valueForLocation(location, value: cardValue)
+            
+            // Remove all available locations pointing to the current location (should be only one)
+            available = available.filter { $0.x != location.x || $0.y != location.y }
+            delegate?.newCardWasAdded(self, location: location, value: cardValue)
+        }
     }
     
     var randomLocation: Location? {
@@ -131,33 +135,47 @@ extension Game.Location: Hashable {
 
 extension Game {
     var isGameOver: Bool {
-        if !available.isEmpty {
-            return false
-        }
-        
-        for x in 0..<Game.widthInCards {
-            for y in 0..<Game.heightInCards {
-                let currentLocation = Location(x: x, y: y)
-                let currentValue = valueForLocation(currentLocation)
-                if valueForLocation(currentLocation.slideLeft()) == currentValue {
-                    return false
-                }
-                
-                if valueForLocation(currentLocation.slideRight()) == currentValue {
-                    return false
-                }
-                
-                if valueForLocation(currentLocation.slideUp()) == currentValue {
-                    return false
-                }
-                
-                if valueForLocation(currentLocation.slideDown()) == currentValue {
-                    return false
+        get {
+            if let gameOver = gameOver where gameOver {
+                return gameOver
+            }
+            
+            if !available.isEmpty {
+                return false
+            }
+            
+            for x in 0..<Game.widthInCards {
+                for y in 0..<Game.heightInCards {
+                    let currentLocation = Location(x: x, y: y)
+                    let currentValue = valueForLocation(currentLocation)
+                    let left = currentLocation.slideLeft()
+                    if left != currentLocation && valueForLocation(left) == currentValue {
+                        return false
+                    }
+                    
+                    let right = currentLocation.slideRight()
+                    if right != currentLocation && valueForLocation(right) == currentValue {
+                        return false
+                    }
+                    
+                    let up = currentLocation.slideUp()
+                    if up != currentLocation && valueForLocation(up) == currentValue {
+                        return false
+                    }
+                    
+                    let down = currentLocation.slideDown()
+                    if down != currentLocation && valueForLocation(down) == currentValue {
+                        return false
+                    }
                 }
             }
+            
+            return true
         }
         
-        return true
+        set(value) {
+            gameOver = value
+        }
     }
     
     func swipeLeft() {

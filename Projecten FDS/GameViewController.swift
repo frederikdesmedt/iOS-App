@@ -29,7 +29,6 @@ class GameViewController: UIViewController {
             skView.ignoresSiblingOrder = true
             
             /* Set the scale mode to scale to fit the window */
-            scene.scaleMode = .AspectFill
             if let nextGame = nextGame {
                 scene.game = nextGame
                 self.gameView = nil
@@ -42,6 +41,7 @@ class GameViewController: UIViewController {
     }
     
     @IBAction func giveUp() {
+        gameScene.game.isGameOver = true
         gameScene.gameOver(gameScene.game)
     }
     

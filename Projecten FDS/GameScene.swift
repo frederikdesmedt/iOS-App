@@ -55,8 +55,7 @@ class GameScene: SKScene {
         }
     }
     
-    
-    func createBoard() {
+    func createBoard(explicit: Bool = false) {
         // Skip board generation if there is no SKView
         guard let _ = view else {
             return
@@ -64,7 +63,7 @@ class GameScene: SKScene {
         
         size = view!.bounds.size
         
-        if size == boardDimensions {
+        if size == boardDimensions && !explicit {
             return
         }
         
@@ -88,7 +87,7 @@ class GameScene: SKScene {
         }
         
         // Reduce multi-dimensional array to one dimensional, filter out all nil values, "unwrap" the optional values
-        removeChildrenInArray(Array(cardBackgrounds.values))
+        removeAllChildren()
         
         // Display background card layout on the screen
         Game.forEachLocation {
@@ -100,14 +99,17 @@ class GameScene: SKScene {
             self.addChild(card)
         }
         
-        cards.forEach { (location, card) in
-            let backgroundCard = cardBackgrounds[location]!
-            let card = createCard()
-            removeCard(location)
-            card.position = backgroundCard.position
-            let label = createLabel(String(game.valueForLocation(location)))
-            card.addChild(label)
-            addCard(location, card: card)
+        Game.forEachLocation { location in
+            let value = self.game.valueForLocation(location)
+            if value > 0 {
+                let backgroundCard = self.cardBackgrounds[location]!
+                let card = self.createCard()
+                self.removeCard(location)
+                card.position = backgroundCard.position
+                let label = self.createLabel(String(value))
+                card.addChild(label)
+                self.addCard(location, card: card)
+            }
         }
     }
     
@@ -183,9 +185,9 @@ extension GameScene: GameDelegate {
             gameUpdated = false
             if let available = game.randomLocation {
                 game.addRandomValue(available)
-            } else if game.isGameOver {
-                gameOver(game)
             }
+        } else if game.isGameOver {
+            gameOver(game)
         }
     }
     

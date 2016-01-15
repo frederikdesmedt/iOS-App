@@ -13,8 +13,13 @@ class HighscoreDetailsViewController: UIViewController {
             skView.showsFPS = true
             skView.showsNodeCount = true
             skView.ignoresSiblingOrder = true
-            scene.scaleMode = .AspectFill
-            scene.game = GameSnapshot.gameFromSnapshot(highscore.game!)
+            
+            let game = GameSnapshot.gameFromSnapshot(highscore.game!)
+            game.shouldAddRandomValues = false
+            scene.game = game
+            scene.shouldAllowSwiping = false
+            scene.createBoard(true)
+            
             skView.presentScene(scene)
             gameScene = scene
         }
