@@ -10,7 +10,11 @@ import SpriteKit
 
 class GameScene: SKScene {
     
-    var game = Game()
+    var game: Game! {
+        didSet {
+            game.shouldGenerateNegativeValues = userDefaults.boolForKey("negative")
+        }
+    }
     
     var cardBackgrounds: [Game.Location: SKNode] = [:]
     var gameCards: [Game.Location: SKNode] = [:]
@@ -19,6 +23,7 @@ class GameScene: SKScene {
     var viewController: GameViewController!
     var shouldAllowSwiping = true
     
+    let userDefaults = NSUserDefaults.standardUserDefaults()
     var cardSize: CGFloat!
     let margin: CGFloat = 5
     var gameUpdated = false
@@ -57,6 +62,10 @@ class GameScene: SKScene {
     
     func createBoard(explicit: Bool = false) {
         // Skip board generation if there is no SKView
+        if game == nil {
+            game = Game()
+        }
+        
         guard let _ = view else {
             return
         }
@@ -101,9 +110,9 @@ class GameScene: SKScene {
         
         Game.forEachLocation { location in
             let value = self.game.valueForLocation(location)
-            if value > 0 {
+            if value != 0 {
                 let backgroundCard = self.cardBackgrounds[location]!
-                let card = self.createCard(true)
+                let card = self.createCard(true, points: self.game.valueForLocation(location))
                 self.removeCard(location)
                 card.position = backgroundCard.position
                 let label = self.createLabel(String(value))
@@ -115,9 +124,38 @@ class GameScene: SKScene {
     
     func createCard(frontCard: Bool, points: Int = 0) -> SKSpriteNode {
         if frontCard {
-            return SKSpriteNode(color: UIColor(red: 0, green: 191.0/255, blue: 180.0/255, alpha: 1), size: CGSize(width: cardSize, height: cardSize))
+            return SKSpriteNode(color: backgroundColorFromPoints(points), size: CGSize(width: cardSize, height: cardSize))
         } else {
             return SKSpriteNode(color: UIColor(red: 1, green: 1, blue: 1, alpha: 0.2), size: CGSize(width: cardSize, height: cardSize))
+        }
+    }
+    
+    func backgroundColorFromPoints(points: Int = 0) -> UIColor {
+        switch points {
+        case points where points < 0:
+            return UIColor(red: 34/255, green: 49/255, blue: 63/255, alpha: 1)
+        case 0:
+            return UIColor(red: 217/255, green: 30/255, blue: 24/255, alpha: 1)
+        case 8:
+            return UIColor(red: 1, green: 206/255, blue: 96/255, alpha: 1)
+        case 16:
+            return UIColor(red: 229/255, green: 163/255, blue: 14/255, alpha: 1)
+        case 32:
+            return UIColor(red: 235/255, green: 149/255, blue: 50/255, alpha: 1)
+        case 64:
+            return UIColor(red: 207/255, green: 192/255, blue: 73/255, alpha: 1)
+        case 128:
+            return UIColor(red: 165/255, green: 192/255, blue: 87/255, alpha: 1)
+        case 256:
+            return UIColor(red: 122/255, green: 193/255, blue: 101/255, alpha: 1)
+        case 512:
+            return UIColor(red: 80/255, green: 193/255, blue: 115/255, alpha: 1)
+        case 1024:
+            return UIColor(red: 38/255, green: 194/255, blue: 129/255, alpha: 1)
+        case points where points >= 2048:
+            return UIColor(red: 65/255, green: 131/255, blue: 215/255, alpha: 1)
+        default:
+            return UIColor(red: 1, green: 219/255, blue: 138/255, alpha: 1)
         }
     }
     
@@ -213,7 +251,7 @@ extension GameScene: GameDelegate {
         }
         
         
-        let card = createCard(true)
+        let card = createCard(true, points: value)
         card.position = backgroundCard.position
         let label = createLabel(String(value))
         card.addChild(label)
@@ -235,15 +273,22 @@ extension GameScene: GameDelegate {
             return debugPrint("Background card at \(from) unavailable")
         }
         
-        let card = cards[from] ?? createCard(true)
+        let card = cards[from] ?? createCard(true, points: newValue)
         card.position = backgroundCardFrom.position
         moveCard(from, to: to)
         let label = createLabel(String(newValue))
         card.removeAllChildren()
         card.addChild(label)
+        card.color = backgroundColorFromPoints(newValue)
         gameUpdated = true
-        let action = SKAction.moveTo(backgroundCardTo.position, duration: 0.15)
-        card.runAction(action)
+        var actionList = [SKAction.moveTo(backgroundCardTo.position, duration: 0.15)]
+        
+        if newValue == 0 {
+            actionList.append(SKAction.scaleTo(0, duration: 0.2))
+            actionList.append(SKAction.removeFromParent())
+        }
+        
+        card.runAction(SKAction.sequence(actionList))
     }
     
     func gameOver(game: Game) {

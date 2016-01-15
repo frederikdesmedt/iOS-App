@@ -4,6 +4,7 @@ class GameOverViewController: UIViewController {
     
     @IBOutlet weak var gameOverTextField: UITextField!
     @IBOutlet weak var gameOverLabel: UILabel!
+    let userDefaults = NSUserDefaults.standardUserDefaults()
     
     var game: Game!
     let highscoreRepository = HighscoreRepository()
@@ -11,6 +12,7 @@ class GameOverViewController: UIViewController {
     
     override func viewDidLoad() {
         gameOverLabel.text = "You got a score of \(game.score)!"
+        gameOverTextField.text = userDefaults.stringForKey("name") ?? ""
     }
     
     @IBAction func finish() {

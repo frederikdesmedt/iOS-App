@@ -34,4 +34,8 @@ class MainMenuViewController: UIViewController, GameViewControllerDelegate {
         self.game = game
         continueGameButton.hidden = false
     }
+    
+    @IBAction func exitApplication() {
+        exit(0)
+    }
 }

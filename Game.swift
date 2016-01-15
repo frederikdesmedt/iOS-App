@@ -56,6 +56,7 @@ class Game {
     var shouldAddRandomValues = true
     var score: Int = 0
     private var gameOver: Bool?
+    var shouldGenerateNegativeValues = false
     
     func setMatrixWithAnimation(matrix: [[Int]]) {
         self.matrix = matrix
@@ -81,9 +82,13 @@ class Game {
     
     func addRandomValue(location: Location) {
         if shouldAddRandomValues {
-            let cardValue = drand48() <= 0.7 ? 2 : 4
-            valueForLocation(location, value: cardValue)
-            
+            let cardValue = Int.random(0...10) <= 9 ? 2 : 4
+            if shouldGenerateNegativeValues && Int.random(0...10) <= 2 {
+                valueForLocation(location, value: -cardValue)
+            } else {
+                valueForLocation(location, value: cardValue)
+            }
+                
             // Remove all available locations pointing to the current location (should be only one)
             available = available.filter { $0.x != location.x || $0.y != location.y }
             delegate?.newCardWasAdded(self, location: location, value: cardValue)
@@ -149,22 +154,22 @@ extension Game {
                     let currentLocation = Location(x: x, y: y)
                     let currentValue = valueForLocation(currentLocation)
                     let left = currentLocation.slideLeft()
-                    if left != currentLocation && valueForLocation(left) == currentValue {
+                    if left != currentLocation && abs(valueForLocation(left)) == abs(currentValue) {
                         return false
                     }
                     
                     let right = currentLocation.slideRight()
-                    if right != currentLocation && valueForLocation(right) == currentValue {
+                    if right != currentLocation && abs(valueForLocation(right)) == abs(currentValue) {
                         return false
                     }
                     
                     let up = currentLocation.slideUp()
-                    if up != currentLocation && valueForLocation(up) == currentValue {
+                    if up != currentLocation && abs(valueForLocation(up)) == abs(currentValue) {
                         return false
                     }
                     
                     let down = currentLocation.slideDown()
-                    if down != currentLocation && valueForLocation(down) == currentValue {
+                    if down != currentLocation && abs(valueForLocation(down)) == abs(currentValue) {
                         return false
                     }
                 }
@@ -188,14 +193,14 @@ extension Game {
                     for bx in 0..<x {
                         let backLocation = Location(x: bx, y: y)
                         let backLocationValue = valueForLocation(backLocation)
-                        if backLocation.x > stop && (backLocationValue == 0 || backLocationValue == locationValue) && isConnected(backLocation, to: location) {
+                        if backLocation.x > stop && (backLocationValue == 0 || abs(backLocationValue) == abs(locationValue)) && isConnected(backLocation, to: location) {
                             available = available.filter { $0 != backLocation }
                             available.append(location)
                             valueForLocation(location, value: 0)
                             valueForLocation(backLocation, value: locationValue + backLocationValue)
                             
-                            if backLocationValue > 0 {
-                                score += backLocationValue + locationValue
+                            if backLocationValue != 0 {
+                                score += abs(backLocationValue) + abs(locationValue)
                             }
                             
                             delegate?.cardsDidMerge(location, to: backLocation, oldValue: locationValue, newValue: locationValue + backLocationValue)
@@ -222,14 +227,14 @@ extension Game {
                     for bx in (Game.widthInCards - 1).stride(through: x + 1, by: -1) {
                         let backLocation = Location(x: bx, y: y)
                         let backLocationValue = valueForLocation(backLocation)
-                        if backLocation.x < stop && (backLocationValue == 0 || backLocationValue == locationValue) && isConnected(location, to: backLocation) {
+                        if backLocation.x < stop && (backLocationValue == 0 || abs(backLocationValue) == abs(locationValue)) && isConnected(location, to: backLocation) {
                             available = available.filter { $0 != backLocation }
                             available.append(location)
                             valueForLocation(location, value: 0)
                             valueForLocation(backLocation, value: locationValue + backLocationValue)
                             
-                            if backLocationValue > 0 {
-                                score += backLocationValue + locationValue
+                            if backLocationValue != 0 {
+                                score += abs(backLocationValue) + abs(locationValue)
                             }
                             
                             delegate?.cardsDidMerge(location, to: backLocation, oldValue: locationValue, newValue: locationValue + backLocationValue)
@@ -256,20 +261,21 @@ extension Game {
                     for by in (Game.heightInCards - 1).stride(through: y + 1, by: -1) {
                         let backLocation = Location(x: x, y: by)
                         let backLocationValue = valueForLocation(backLocation)
-                        if backLocation.y < stop && (backLocationValue == 0 || backLocationValue == locationValue) && isConnected(location, to: backLocation) {
+                        if backLocation.y < stop && (backLocationValue == 0 || abs(backLocationValue) == abs(locationValue)) && isConnected(location, to: backLocation) {
                             available = available.filter { $0 != backLocation }
                             available.append(location)
                             valueForLocation(location, value: 0)
                             valueForLocation(backLocation, value: locationValue + backLocationValue)
                             
-                            if backLocationValue > 0 {
-                                score += backLocationValue + locationValue
+                            if backLocationValue != 0 {
+                                score += abs(backLocationValue) + abs(locationValue)
                             }
                             
                             delegate?.cardsDidMerge(location, to: backLocation, oldValue: locationValue, newValue: locationValue + backLocationValue)
                             if backLocationValue != 0 {
                                 stop = backLocation.y
                             }
+                            
                             break
                         }
                     }
@@ -290,14 +296,14 @@ extension Game {
                     for by in 0..<y {
                         let backLocation = Location(x: x, y: by)
                         let backLocationValue = valueForLocation(backLocation)
-                        if backLocation.x > stop && (backLocationValue == 0 || backLocationValue == locationValue) && isConnected(backLocation, to: location) {
+                        if backLocation.x > stop && (backLocationValue == 0 || abs(backLocationValue) == abs(locationValue)) && isConnected(backLocation, to: location) {
                             available = available.filter { $0 != backLocation }
                             available.append(location)
                             valueForLocation(location, value: 0)
                             valueForLocation(backLocation, value: locationValue + backLocationValue)
                             
-                            if backLocationValue > 0 {
-                                score += backLocationValue + locationValue
+                            if backLocationValue != 0 {
+                                score += abs(backLocationValue) + abs(locationValue)
                             }
                             
                             delegate?.cardsDidMerge(location, to: backLocation, oldValue: locationValue, newValue: locationValue + backLocationValue)
@@ -339,5 +345,23 @@ extension Game {
         }
         
         return false
+    }
+}
+
+extension Int
+{
+    static func random(range: Range<Int> ) -> Int
+    {
+        var offset = 0
+        
+        if range.startIndex < 0   // allow negative ranges
+        {
+            offset = abs(range.startIndex)
+        }
+        
+        let mini = UInt32(range.startIndex + offset)
+        let maxi = UInt32(range.endIndex   + offset)
+        
+        return Int(mini + arc4random_uniform(maxi - mini)) - offset
     }
 }
