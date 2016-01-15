@@ -91,7 +91,7 @@ class GameScene: SKScene {
         
         // Display background card layout on the screen
         Game.forEachLocation {
-            let card = self.createCard()
+            let card = self.createCard(false)
             self.cardBackgrounds[Game.Location(x: $0.x, y: $0.y)] = card
             let x = self.viewWidth * CGFloat($0.x) / CGFloat(Game.widthInCards) + self.cardSize / 2 + self.margin
             let y = self.viewHeight * CGFloat($0.y) / CGFloat(Game.heightInCards) + self.cardSize / 2 + self.margin
@@ -103,7 +103,7 @@ class GameScene: SKScene {
             let value = self.game.valueForLocation(location)
             if value > 0 {
                 let backgroundCard = self.cardBackgrounds[location]!
-                let card = self.createCard()
+                let card = self.createCard(true)
                 self.removeCard(location)
                 card.position = backgroundCard.position
                 let label = self.createLabel(String(value))
@@ -113,8 +113,12 @@ class GameScene: SKScene {
         }
     }
     
-    func createCard() -> SKSpriteNode {
-        return SKSpriteNode(color: UIColor(red: 1, green: 1, blue: 1, alpha: 0.2), size: CGSize(width: cardSize, height: cardSize))
+    func createCard(frontCard: Bool, points: Int = 0) -> SKSpriteNode {
+        if frontCard {
+            return SKSpriteNode(color: UIColor(red: 0, green: 191.0/255, blue: 180.0/255, alpha: 1), size: CGSize(width: cardSize, height: cardSize))
+        } else {
+            return SKSpriteNode(color: UIColor(red: 1, green: 1, blue: 1, alpha: 0.2), size: CGSize(width: cardSize, height: cardSize))
+        }
     }
     
     var cards: [Game.Location: SKSpriteNode] = [:]
@@ -128,6 +132,17 @@ class GameScene: SKScene {
         if let card = cards[position] {
             removeChildrenInArray([card])
             cards.removeValueForKey(position)
+        }
+    }
+    
+    func moveCard(from: Game.Location, to: Game.Location) {
+        if let card = cards[to] {
+            removeChildrenInArray([card])
+        }
+        
+        if let card = cards[from] {
+            cards.removeValueForKey(from)
+            cards[to] = card
         }
     }
     
@@ -198,26 +213,37 @@ extension GameScene: GameDelegate {
         }
         
         
-        let card = createCard()
+        let card = createCard(true)
         card.position = backgroundCard.position
         let label = createLabel(String(value))
         card.addChild(label)
+        card.alpha = 0
         addCard(location, card: card)
+        let action = SKAction.sequence([
+            SKAction.fadeInWithDuration(0.2),
+            SKAction.scaleTo(1.1, duration: 0.15),
+            SKAction.scaleTo(1, duration: 0.15)])
+        card.runAction(action)
     }
     
     func cardsDidMerge(from: Game.Location, to: Game.Location, oldValue: Int, newValue: Int) {
-        guard let backgroundCard = cardBackgrounds[to] else {
-            return debugPrint("Background card unavailable")
+        guard let backgroundCardTo = cardBackgrounds[to] else {
+            return debugPrint("Background card at \(to) unavailable")
         }
         
-        let card = createCard()
-        removeCard(to)
-        card.position = backgroundCard.position
+        guard let backgroundCardFrom = cardBackgrounds[from] else {
+            return debugPrint("Background card at \(from) unavailable")
+        }
+        
+        let card = cards[from] ?? createCard(true)
+        card.position = backgroundCardFrom.position
+        moveCard(from, to: to)
         let label = createLabel(String(newValue))
+        card.removeAllChildren()
         card.addChild(label)
-        addCard(to, card: card)
-        removeCard(from)
         gameUpdated = true
+        let action = SKAction.moveTo(backgroundCardTo.position, duration: 0.15)
+        card.runAction(action)
     }
     
     func gameOver(game: Game) {
