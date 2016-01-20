@@ -22,6 +22,7 @@ class GameScene: SKScene {
     var viewHeight: CGFloat!
     var viewController: GameViewController!
     var shouldAllowSwiping = true
+    var highscoreMode = false
     
     let userDefaults = NSUserDefaults.standardUserDefaults()
     var cardSize: CGFloat!
@@ -54,7 +55,7 @@ class GameScene: SKScene {
             Game.forEachLocation {
                 let value = self.game.valueForLocation($0)
                 if value != 0 {
-                    self.newCardWasAdded(self.game, location: $0, value: value)
+                    self.didAddNewCard(self.game, location: $0, value: value)
                 }
             }
         }
@@ -87,7 +88,7 @@ class GameScene: SKScene {
             anchorPoint = CGPoint(x: 0.25, y: 0)
         case .Phone where UIDeviceOrientationIsPortrait(UIDevice.currentDevice().orientation):
             anchorPoint = CGPoint(x: 0, y: 0.25)
-        case .Pad where UIDeviceOrientationIsLandscape(UIDevice.currentDevice().orientation):
+        case .Pad where UIDeviceOrientationIsLandscape(UIDevice.currentDevice().orientation) && !highscoreMode:
             anchorPoint = CGPoint(x: 0.15, y: 0)
         case .Pad where UIDeviceOrientationIsPortrait(UIDevice.currentDevice().orientation):
             anchorPoint = CGPoint(x: 0, y: 0.1)
@@ -233,21 +234,21 @@ extension GameScene {
 
 extension GameScene: GameDelegate {
     
-    func turnEnded(game: Game) {
+    func didEndTurn(game: Game) {
         if gameUpdated {
             gameUpdated = false
             if let available = game.randomLocation {
                 game.addRandomValue(available)
             }
         } else if game.isGameOver {
-            gameOver(game)
+            didGameOver(game)
         }
     }
     
-    func newCardWasAdded(game: Game, location: Game.Location, value: Int) {
+    func didAddNewCard(game: Game, location: Game.Location, value: Int) {
         guard let backgroundCard = cardBackgrounds[location] else {
             createBoard()
-            return newCardWasAdded(game, location: location, value: value)
+            return didAddNewCard(game, location: location, value: value)
         }
         
         
@@ -264,7 +265,7 @@ extension GameScene: GameDelegate {
         card.runAction(action)
     }
     
-    func cardsDidMerge(from: Game.Location, to: Game.Location, oldValue: Int, newValue: Int) {
+    func didMergeCards(from: Game.Location, to: Game.Location, oldValue: Int, newValue: Int) {
         guard let backgroundCardTo = cardBackgrounds[to] else {
             return debugPrint("Background card at \(to) unavailable")
         }
@@ -291,7 +292,7 @@ extension GameScene: GameDelegate {
         card.runAction(SKAction.sequence(actionList))
     }
     
-    func gameOver(game: Game) {
+    func didGameOver(game: Game) {
         viewController.didLoseGame(game)
         shouldAllowSwiping = false
     }

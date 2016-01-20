@@ -62,7 +62,7 @@ class Game {
         self.matrix = matrix
         Game.forEachLocation {
             location in
-            delegate?.newCardWasAdded(self, location: location, value: valueForLocation(location))
+            delegate?.didAddNewCard(self, location: location, value: valueForLocation(location))
         }
     }
     
@@ -91,7 +91,7 @@ class Game {
                 
             // Remove all available locations pointing to the current location (should be only one)
             available = available.filter { $0.x != location.x || $0.y != location.y }
-            delegate?.newCardWasAdded(self, location: location, value: cardValue)
+            delegate?.didAddNewCard(self, location: location, value: cardValue)
         }
     }
     
@@ -203,7 +203,7 @@ extension Game {
                                 score += abs(backLocationValue) + abs(locationValue)
                             }
                             
-                            delegate?.cardsDidMerge(location, to: backLocation, oldValue: locationValue, newValue: locationValue + backLocationValue)
+                            delegate?.didMergeCards(location, to: backLocation, oldValue: locationValue, newValue: locationValue + backLocationValue)
                             if backLocationValue != 0 {
                                 stop = backLocation.x
                             }
@@ -214,7 +214,7 @@ extension Game {
             }
         }
         
-        delegate?.turnEnded(self)
+        delegate?.didEndTurn(self)
     }
     
     func swipeRight() {
@@ -237,7 +237,7 @@ extension Game {
                                 score += abs(backLocationValue) + abs(locationValue)
                             }
                             
-                            delegate?.cardsDidMerge(location, to: backLocation, oldValue: locationValue, newValue: locationValue + backLocationValue)
+                            delegate?.didMergeCards(location, to: backLocation, oldValue: locationValue, newValue: locationValue + backLocationValue)
                             if backLocationValue != 0 {
                                 stop = backLocation.x
                             }
@@ -248,7 +248,7 @@ extension Game {
             }
         }
         
-        delegate?.turnEnded(self)
+        delegate?.didEndTurn(self)
     }
     
     func swipeUp() {
@@ -271,7 +271,7 @@ extension Game {
                                 score += abs(backLocationValue) + abs(locationValue)
                             }
                             
-                            delegate?.cardsDidMerge(location, to: backLocation, oldValue: locationValue, newValue: locationValue + backLocationValue)
+                            delegate?.didMergeCards(location, to: backLocation, oldValue: locationValue, newValue: locationValue + backLocationValue)
                             if backLocationValue != 0 {
                                 stop = backLocation.y
                             }
@@ -283,7 +283,7 @@ extension Game {
             }
         }
         
-        delegate?.turnEnded(self)
+        delegate?.didEndTurn(self)
     }
     
     func swipeDown() {
@@ -306,7 +306,7 @@ extension Game {
                                 score += abs(backLocationValue) + abs(locationValue)
                             }
                             
-                            delegate?.cardsDidMerge(location, to: backLocation, oldValue: locationValue, newValue: locationValue + backLocationValue)
+                            delegate?.didMergeCards(location, to: backLocation, oldValue: locationValue, newValue: locationValue + backLocationValue)
                             if backLocationValue != 0 {
                                 stop = backLocation.x
                             }
@@ -317,7 +317,7 @@ extension Game {
             }
         }
         
-        delegate?.turnEnded(self)
+        delegate?.didEndTurn(self)
     }
     
     /// Two locations are connected if they have the same x or y and there are only 0's in between

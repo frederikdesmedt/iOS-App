@@ -42,7 +42,7 @@ class GameViewController: UIViewController {
     
     @IBAction func giveUp() {
         gameScene.game.isGameOver = true
-        gameScene.gameOver(gameScene.game)
+        gameScene.didGameOver(gameScene.game)
     }
     
     override func didMoveToParentViewController(parent: UIViewController?) {

@@ -6,17 +6,15 @@ class HighscoreRepository {
     
     var highscores: [Highscore] {
         let dbResult = realm?.objects(Highscore)
-        var result = [Highscore]()
-        dbResult?.forEach {
-            result.append($0)
-        }
         
-        return result
+        let result = dbResult?.map {$0}
+        
+        return result ?? []
     }
     
     func save(highscore: Highscore) {
         realm?.beginWrite()
         realm?.add(highscore)
-        try! realm?.commitWrite()
+        _ = try? realm?.commitWrite()
     }
 }
